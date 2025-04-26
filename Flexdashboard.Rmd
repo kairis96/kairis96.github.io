@@ -1,26 +1,22 @@
 ---
 title: "Deaths related to Cancer in Georgia from 2009 to 2020"
 author: "Iris Cho"
-output: 
-  flexdashboard::flex_dashboard:
-    vertical_layout: scroll
+output:
+  flexdashboard::flex_dashboard
 ---
 
 ```{r setup, include=FALSE}
+library(flexdashboard)
 library(highcharter)
 library(dplyr)
 library(tidyverse)
-library(here)
 library(viridisLite)
-library(reticulate)
-library(flexdashboard)
-library(shiny)
 library(plotly)
 library(sf)
 library(geojsonio)
 library(tigris)
 
-# merge and clean data
+# merge and clean data for trend plot
 file_path <- ("~/Documents/Emory RSPH/S2025/Current Topics in DS/WONDER_GA/")
 files <- list.files(path = file_path, pattern = "ga.*\\.csv", full.names = TRUE)
 dfs <- lapply(files, function(file) {
@@ -35,6 +31,7 @@ dfs <- lapply(files, function(file) {
 master_df <- bind_rows(dfs)
 master_df$TOT_DEATH <- as.numeric(master_df$TOT_DEATH)
 
+# merge and clean data for heatmap 
 path <- ("~/Documents/Emory RSPH/S2025/Current Topics in DS/WONDER_GA/")
 ga_files <- list.files(path = path, pattern = "\\.csv$", full.names = TRUE)
 combined_data <- map_df(ga_files, read_csv)
@@ -46,7 +43,7 @@ merged_map <- merge(ga_map, combined_data, by.x = "GEOID", by.y = "COUNTYFIPS")
 merged_map$GEOID <- as.character(merged_map$GEOID)
 ```
 
-Visualizations
+Visualizations {data-orientation=rows}
 ======================================================================
 Row {data-width=700}
 -----------------------------------------------------------------------
@@ -95,7 +92,7 @@ Row {data-width=700}
 ----------------------------------------------------------------------------
 ### Cancer-Related Deaths by County in Georgia (2020)
 ##### Key Takeaway: This spatial heatmap visually represents the spatial distribution of cancer-related deaths in 2020, helping viewers identify regions with high population concentrations. Counties without color indicate suppressed or underreported data which indicates supplemental intervention is needed. 
-```{r}
+```{r, heatmap, echo=FALSE, message=FALSE}
 geojson_file <- tempfile(fileext = ".geojson")
 st_write(merged_map, geojson_file, driver = "GeoJSON")
 ga_geojson <- geojson_read(geojson_file, what = "sp")
@@ -134,7 +131,9 @@ Row
 
 About
 ============================================================================
-This project uses the AHRQ (Agency for Healthcare Research and Quality)’s data for Social Determinants of Health (SDOH) and CDC’s WONDER (Wide-ranging Online Data for Epidemiologic Research) to understand cancer mortality rates and it’s relation to SDOH at county-level in Georgia from 2009 to 2020. The data were aggregated from sources like the U.S. Census Bureau, CDC, and Healthcare Cost and Utilization Project (HCUP) using surveys, administrative records, disease surveillance and death certificates. The study population includes residents of Georgia in 159 counties from 2009 to 2020 who’s cause of death was determined to be cancer. Key variables include total deaths in the county related to cancer, counties, year reported, total population of the county, median age, race, household factors, and healthcare access.
+Row
+-----------------------------------------------------------------------
+This project uses the AHRQ (Agency for Healthcare Research and Quality)’s data for Social Determinants of Health (SDOH) and CDC’s WONDER (Wide-ranging Online Data for Epidemiologic Research) to understand cancer mortality rates and its relation to SDOH at county-level in Georgia from 2009 to 2020. The data were aggregated from sources like the U.S. Census Bureau, CDC, and Healthcare Cost and Utilization Project (HCUP) using surveys, administrative records, disease surveillance and death certificates. The study population includes residents of Georgia in 159 counties from 2009 to 2020 who’s cause of death was determined to be cancer. Key variables include total deaths in the county related to cancer, counties, year reported, total population of the county, median age, race, household factors, and healthcare access.
 AHRQ Database: https://www.ahrq.gov/sdoh/data-analytics/sdoh-data.html
 CDC WONDER: https://wonder.cdc.gov/cancer.html
 
