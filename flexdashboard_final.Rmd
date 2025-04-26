@@ -4,8 +4,7 @@ output:
   flexdashboard::flex_dashboard:
     orientation: rows
     vertical_layout: scroll
-    theme: default
-    self_contained: TRUE
+    self_contained: FALSE
 ---
 
 ```{r setup, include=FALSE}
