@@ -4,7 +4,7 @@ output:
   flexdashboard::flex_dashboard:
     orientation: rows
     vertical_layout: scroll
-    self_contained: FALSE
+    self_contained: TRUE
 ---
 
 ```{r setup, include=FALSE}
@@ -17,9 +17,10 @@ library(plotly)
 library(sf)
 library(geojsonio)
 library(tigris)
+library(rmapshaper)
 
 # merge and clean data for trend plot
-file_path <- ("~/Documents/Emory RSPH/S2025/Current Topics in DS/WONDER_GA/")
+file_path <- ("~/Documents/Emory RSPH/S2025/Current Topics in DS/doc/WONDER_GA/")
 files <- list.files(path = file_path, pattern = "ga.*\\.csv", full.names = TRUE)
 dfs <- lapply(files, function(file) {
   df <- read.csv(file)
@@ -38,14 +39,15 @@ death_summary <- master_df |>
   group_by(COUNTYFIPS, COUNTY) |>
   summarise(TOT_DEATH = sum(TOT_DEATH, na.rm = TRUE), .groups = "drop")
 ga_map <- counties(state = "GA", year = 2020, class = "sf")
-ga_map$GEOID <- as.character(ga_map$GEOID)
+ga_map_simple <- ms_simplify(ga_map, keep = 0.05, keep_shapes = TRUE)
+ga_map_simple$GEOID <- as.character(ga_map_simple$GEOID)
 death_summary$COUNTYFIPS <- as.character(death_summary$COUNTYFIPS)
-merged_map <- merge(ga_map, death_summary, by.x = "GEOID", by.y = "COUNTYFIPS")
+merged_map <- merge(ga_map_simple, death_summary, by.x = "GEOID", by.y = "COUNTYFIPS")
 ```
 
 Visualizations
 ======================================================================
-Row {data-width=700}
+Row
 -----------------------------------------------------------------------
 ### Top 10 Counties Death Trend (2009–2020)
 ##### Key Takeaway: This plot highlights the top 10 counties with the highest cancer-related mortality rates. Notably, counties within metropolitan areas remain in the top 10, which may be influenced by healthcare accessibility and high population density in these counties.
@@ -88,7 +90,7 @@ p
 
 ```
 
-Row {data-width=700}
+Row
 ----------------------------------------------------------------------------
 ### Cancer-Related Deaths by County in Georgia (2009-2020)
 ##### Key Takeaway: This spatial heatmap visually represents the spatial distribution of total number of cancer-related deaths from 2009 to 2020, helping viewers identify regions with high population concentrations. This map creates a data-informed evidence for not only for the policy makers but also the general audience to drive the public health interventions.
@@ -127,10 +129,7 @@ Row {data-height = 150}
 -----------------------------------------------------------------------
 #### Purpose of the Dashboard
 ##### The purpose of this dashboard is to provide a dynamic, visual exploration of cancer-related mortality trends across Georgia counties from 2009 to 2020. It aims to highlight regional disparities in cancer burden, assist in public health decision-making, and offer a user-friendly tool for academic, clinical, and policy audiences. 
-
-Row {data-height = 150}
------------------------------------------------------------------------
-##### Find the GitHub Repository here: https://github.com/kairis96/DATA555
+##### Access the [GitHub Repository](https://github.com/kairis96/kairis96.github.io/tree/main)
 
 About
 ============================================================================
