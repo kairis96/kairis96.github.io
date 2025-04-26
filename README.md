@@ -16,4 +16,4 @@ It provides both a **geospatial choropleth map** and a **trend plot** for the to
 ## How to Run
 1. Clone this repository:
    ```bash
-   git clone https://github.com/YOUR_USERNAME/cancer-deaths-dashboard.git
+   git clone https://github.com/YOUR_USERNAME/kairis96.github.io.git
