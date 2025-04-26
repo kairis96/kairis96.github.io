@@ -10,7 +10,7 @@ It provides both a **geospatial choropleth map** and a **trend plot** for the to
 
 ## Data Sources
 - [CDC WONDER](https://wonder.cdc.gov/)
-- [AHRQ SDOH Data](https://www.ahrq.gov/sdoh/data-analytics/sdoh-data.htm)
+- [AHRQ SDOH Data](https://www.ahrq.gov/sdoh/data-analytics/sdoh-data.html)
 - [US Census Bureau TIGER/Line Shapefiles](https://www.census.gov/geographies/mapping-files/time-series/geo/tiger-line-file.html)
 
 ## How to Run
